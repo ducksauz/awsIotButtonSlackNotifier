@@ -38,3 +38,16 @@ def lambda_handler(event, context):
     else:
         logger.info('Slack sent successfully')
 
+    sumoUrl = "https://endpoint1.collection.eu.sumologic.com/receiver/v1/http/XXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+    payload = "# HELP pot_of_coffee_brewed Count of pots brewed\n# TYPE pot_of_coffee_brewed counter\npot_of_coffee_brewed{reason=\"coffee\"} 1 %s"%(time.time())
+    headers = {
+        'X-Sumo-Category': "your/sourceCatetory/seattleCoffeePot",
+        'X-Sumo-Host': "coffepot.sea.in.example.org",
+        'Content-Type': "application/vnd.sumologic.prometheus"
+    }
+
+    response = requests.request("POST", sumoUrl, data=payload, headers=headers)
+
+    logger.info(response.text)
+
